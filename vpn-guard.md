@@ -249,6 +249,23 @@ launchctl kickstart -k gui/$(id -u)/local.clash-verge.guardian
 - `launchd.err.log`：launchd stderr 快照
 - `20260519-clash-verge-guardian.md`：Codex 恢复交接记录副本
 
+## GitHub 公开同步
+
+已按要求将 `vpn-guard` 目录初始化为独立 Git 仓库，并同步到 GitHub 公开仓库：
+
+- GitHub repo：`https://github.com/maxleolee-eng/vpn-guard`
+- owner：`maxleolee-eng`
+- visibility：`PUBLIC`
+- default branch：`main`
+- remote：`https://github.com/maxleolee-eng/vpn-guard.git`
+- 初始公开提交：`a153c19262b879e44ba91eb008687a2dda0b1ef1`
+
+发布前做过敏感信息检查：
+
+- 没有加入 Clash 原始备份目录。
+- 没有加入订阅 URL、节点密码、token、私钥或原始 Clash profile。
+- 提交 author/committer 已改为 GitHub noreply：`248510948+maxleolee-eng@users.noreply.github.com`，避免公开本机局域网邮箱。
+
 ## 注意事项
 
 - 归档不包含订阅 URL、节点密码、token 或任何密钥。
