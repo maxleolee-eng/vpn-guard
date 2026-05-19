@@ -1,0 +1,646 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "json"
+require "open3"
+require "optparse"
+require "thread"
+require "time"
+require "uri"
+require "yaml"
+
+APP_NAME = "Clash Verge"
+APP_BIN = "/Applications/Clash Verge.app/Contents/MacOS/clash-verge"
+APP_LABEL = "io.github.clash-verge-rev.clash-verge-rev"
+DATA_DIR = File.expand_path("~/Library/Application Support/io.github.clash-verge-rev.clash-verge-rev")
+PROFILES_FILE = File.join(DATA_DIR, "profiles.yaml")
+VERGE_FILE = File.join(DATA_DIR, "verge.yaml")
+CLASH_FILE = File.join(DATA_DIR, "clash-verge.yaml")
+SOCKET = "/tmp/verge/verge-mihomo.sock"
+MIHOMO_BIN = "/Applications/Clash Verge.app/Contents/MacOS/verge-mihomo"
+
+STATE_DIR = File.expand_path("~/.local/state/clash-verge-guardian")
+STATE_FILE = File.join(STATE_DIR, "state.json")
+LOCK_FILE = File.join(STATE_DIR, "guardian.lock")
+LOG_FILE = File.join(STATE_DIR, "guardian.log")
+REPORT_FILE = File.join(STATE_DIR, "latest-report.json")
+BACKUP_DIR = File.join(STATE_DIR, "backups")
+
+MONITOR_INTERVAL = Integer(ENV.fetch("CLASH_GUARDIAN_INTERVAL", "60"))
+SUBSCRIPTION_REFRESH_INTERVAL = Integer(ENV.fetch("CLASH_GUARDIAN_REFRESH_INTERVAL", (7 * 24 * 60 * 60).to_s))
+LATENCY_THRESHOLD_MS = Integer(ENV.fetch("CLASH_GUARDIAN_LATENCY_THRESHOLD_MS", "400"))
+DELAY_TIMEOUT_MS = Integer(ENV.fetch("CLASH_GUARDIAN_DELAY_TIMEOUT_MS", "5000"))
+DELAY_CURL_TIMEOUT_SECONDS = Integer(ENV.fetch("CLASH_GUARDIAN_CURL_TIMEOUT_SECONDS", "8"))
+RANK_WORKERS = Integer(ENV.fetch("CLASH_GUARDIAN_RANK_WORKERS", "6"))
+
+TEST_URLS = [
+  ["google", "https://www.google.com/generate_204"],
+  ["openai", "https://api.openai.com"],
+  ["github", "https://github.com"]
+].freeze
+
+GROUP_TYPE_NAMES = ["Selector", "URLTest", "Fallback", "LoadBalance", "Relay"].freeze
+PROFILE_SECTION_KEYS = [
+  "proxies",
+  "proxy-groups",
+  "rules",
+  "proxy-providers",
+  "rule-providers",
+  "sub-rules"
+].freeze
+
+def now_i
+  Time.now.to_i
+end
+
+def safe_error(error)
+  error.to_s.gsub(%r{https?://\S+}, "https://<redacted>")
+end
+
+def log(level, message, fields = {})
+  FileUtils.mkdir_p(STATE_DIR)
+  entry = { ts: Time.now.iso8601, level: level, message: message }.merge(fields)
+  line = JSON.generate(entry)
+  puts(line)
+  File.open(LOG_FILE, "a") { |file| file.puts(line) }
+end
+
+def load_json(path, fallback = {})
+  return fallback unless File.exist?(path)
+
+  JSON.parse(File.read(path))
+rescue JSON::ParserError
+  fallback
+end
+
+def save_json(path, data)
+  tmp = "#{path}.tmp"
+  File.write(tmp, JSON.pretty_generate(data) + "\n")
+  File.rename(tmp, path)
+end
+
+def load_yaml_file(path)
+  YAML.safe_load(File.read(path), permitted_classes: [Time, Symbol], aliases: true) || {}
+rescue Errno::ENOENT
+  {}
+end
+
+def url_component(value)
+  URI.encode_www_form_component(value.to_s).gsub("+", "%20")
+end
+
+def capture_status(*argv)
+  stdout, stderr, status = Open3.capture3(*argv)
+  [stdout, stderr, status.exitstatus]
+end
+
+def curl_json(method, path, body = nil, timeout = DELAY_CURL_TIMEOUT_SECONDS)
+  raise "mihomo unix socket missing: #{SOCKET}" unless File.socket?(SOCKET)
+
+  argv = [
+    "/usr/bin/curl",
+    "--silent",
+    "--show-error",
+    "--max-time", timeout.to_s,
+    "--unix-socket", SOCKET
+  ]
+  argv += ["-X", method] unless method == "GET"
+  if body
+    argv += ["-H", "Content-Type: application/json", "--data", JSON.generate(body)]
+  end
+  argv << "http://127.0.0.1#{path}"
+
+  stdout, stderr, code = capture_status(*argv)
+  raise "curl #{method} #{path} failed code=#{code} err=#{safe_error(stderr)}" unless code.zero?
+
+  stdout.strip.empty? ? {} : JSON.parse(stdout)
+end
+
+def api_get(path, timeout = DELAY_CURL_TIMEOUT_SECONDS)
+  curl_json("GET", path, nil, timeout)
+end
+
+def api_patch(path, body)
+  curl_json("PATCH", path, body)
+end
+
+def api_put(path, body)
+  curl_json("PUT", path, body)
+end
+
+def api_delete(path)
+  curl_json("DELETE", path, nil)
+end
+
+def api_available?
+  api_get("/configs", 4)
+  true
+rescue StandardError
+  false
+end
+
+def wait_for_api(seconds)
+  deadline = Time.now + seconds
+  until Time.now > deadline
+    return true if api_available?
+
+    sleep 1
+  end
+  false
+end
+
+def process_running?(pattern)
+  _stdout, _stderr, code = capture_status("/usr/bin/pgrep", "-f", pattern)
+  code.zero?
+end
+
+def launch_app
+  system("/usr/bin/open", "-gj", "-a", APP_NAME)
+end
+
+def refresh_app_runtime
+  system("/usr/bin/open", "-gj", "-a", APP_NAME)
+end
+
+def refresh_app_profile
+  false
+end
+
+def kickstart_app
+  system("/bin/launchctl", "kickstart", "-k", "gui/#{Process.uid}/#{APP_LABEL}")
+end
+
+def restart_app(reason)
+  log("warn", "clash verge api unavailable, attempting app/core restart", reason: reason)
+  launch_app
+  return true if wait_for_api(20)
+
+  kickstart_app
+  return true if wait_for_api(30)
+
+  system("/usr/bin/pkill", "-f", APP_BIN)
+  sleep 2
+  launch_app
+  wait_for_api(45)
+end
+
+def patch_simple_top_level_yaml(path, key, value)
+  return false unless File.exist?(path)
+
+  desired = "#{key}: #{value}\n"
+  lines = File.readlines(path, chomp: false)
+  changed = false
+  found = false
+  next_lines = lines.map do |line|
+    if line.match?(/^#{Regexp.escape(key)}:\s*/)
+      found = true
+      if line == desired
+        line
+      else
+        changed = true
+        desired
+      end
+    else
+      line
+    end
+  end
+  unless found
+    changed = true
+    next_lines << desired
+  end
+  return false unless changed
+
+  FileUtils.mkdir_p(BACKUP_DIR)
+  FileUtils.cp(path, File.join(BACKUP_DIR, "#{File.basename(path)}.#{Time.now.strftime("%Y%m%d_%H%M%S")}.bak"))
+  File.write(path, next_lines.join)
+  true
+end
+
+def ensure_verge_preferences
+  changed = []
+  changed << "enable_tun_mode" if patch_simple_top_level_yaml(VERGE_FILE, "enable_tun_mode", "true")
+  changed << "enable_auto_launch" if patch_simple_top_level_yaml(VERGE_FILE, "enable_auto_launch", "true")
+  log("info", "patched verge preferences", keys: changed) unless changed.empty?
+end
+
+def ensure_runtime_config
+  ensure_verge_preferences
+
+  configs = api_get("/configs", 5)
+  patch = {}
+  patch["mode"] = "rule" unless configs["mode"] == "rule"
+
+  tun = configs["tun"] || {}
+  unless tun["enable"] == true
+    patch["tun"] = {
+      "enable" => true,
+      "stack" => "gvisor",
+      "auto-route" => true,
+      "auto-detect-interface" => true,
+      "dns-hijack" => ["any:53"]
+    }
+  end
+
+  unless patch.empty?
+    api_patch("/configs", patch)
+    log("info", "patched mihomo runtime config", patch: patch)
+    sleep 1
+  end
+
+  configs = api_get("/configs", 5)
+  log("info", "runtime config verified",
+      mode: configs["mode"],
+      tun: configs.dig("tun", "enable"),
+      tun_device: configs.dig("tun", "device"),
+      mixed_port: configs["mixed-port"])
+  configs
+end
+
+def current_profile_item
+  profiles = load_yaml_file(PROFILES_FILE)
+  current_uid = profiles["current"]
+  items = profiles["items"] || []
+  current = items.find { |item| item["uid"] == current_uid }
+  current ||= items.find { |item| item["type"] == "remote" }
+  [profiles, current]
+end
+
+def parse_headers(path)
+  headers = {}
+  return headers unless File.exist?(path)
+
+  File.readlines(path, chomp: true).each do |line|
+    next unless line.include?(":")
+
+    key, value = line.split(":", 2)
+    headers[key.downcase] = value.strip
+  end
+  headers
+end
+
+def parse_subscription_userinfo(value)
+  extra = {}
+  value.to_s.split(/[;&]/).each do |part|
+    key, raw = part.strip.split("=", 2)
+    next unless key && raw
+
+    extra[key] = raw.to_i
+  end
+  extra
+end
+
+def update_profile_metadata(uid, timestamp, headers = {})
+  profiles = load_yaml_file(PROFILES_FILE)
+  changed = false
+  (profiles["items"] || []).each do |item|
+    next unless item["uid"] == uid
+
+    item["updated"] = timestamp
+    if headers["subscription-userinfo"]
+      extra = parse_subscription_userinfo(headers["subscription-userinfo"])
+      item["extra"] = extra unless extra.empty?
+    end
+    item["home"] = headers["profile-web-page-url"] if headers["profile-web-page-url"]
+    changed = true
+  end
+  return false unless changed
+
+  FileUtils.mkdir_p(BACKUP_DIR)
+  FileUtils.cp(PROFILES_FILE, File.join(BACKUP_DIR, "profiles.yaml.#{Time.now.strftime("%Y%m%d_%H%M%S")}.bak"))
+  File.write(PROFILES_FILE, YAML.dump(profiles))
+  true
+end
+
+def ensure_runtime_shape(config)
+  config["mode"] = "rule"
+  config["profile"] = (config["profile"].is_a?(Hash) ? config["profile"] : {}).merge("store-selected" => true)
+  tun = config["tun"].is_a?(Hash) ? config["tun"] : {}
+  config["tun"] = {
+    "enable" => true,
+    "stack" => tun["stack"] || "gvisor",
+    "auto-route" => tun.key?("auto-route") ? tun["auto-route"] : true,
+    "strict-route" => tun.key?("strict-route") ? tun["strict-route"] : false,
+    "auto-detect-interface" => tun.key?("auto-detect-interface") ? tun["auto-detect-interface"] : true,
+    "dns-hijack" => tun["dns-hijack"] || ["any:53"]
+  }.merge(tun).merge("enable" => true)
+  config
+end
+
+def build_runtime_config(subscription)
+  runtime = load_yaml_file(CLASH_FILE)
+  PROFILE_SECTION_KEYS.each { |key| runtime.delete(key) }
+  PROFILE_SECTION_KEYS.each do |key|
+    runtime[key] = subscription[key] if subscription.key?(key)
+  end
+  ensure_runtime_shape(runtime)
+end
+
+def validate_runtime_config(path)
+  stdout, stderr, code = capture_status(MIHOMO_BIN, "-t", "-d", DATA_DIR, "-f", path)
+  raise "mihomo config validation failed code=#{code} err=#{safe_error(stderr)} out=#{safe_error(stdout)}" unless code.zero?
+end
+
+def reload_runtime_config(path)
+  api_put("/configs?force=true", { "path" => path })
+end
+
+def write_and_reload_runtime(subscription)
+  runtime = build_runtime_config(subscription)
+  tmp = File.join(STATE_DIR, "clash-verge.yaml.next")
+  File.write(tmp, YAML.dump(runtime))
+  validate_runtime_config(tmp)
+
+  FileUtils.mkdir_p(BACKUP_DIR)
+  FileUtils.cp(CLASH_FILE, File.join(BACKUP_DIR, "clash-verge.yaml.#{Time.now.strftime("%Y%m%d_%H%M%S")}.bak")) if File.exist?(CLASH_FILE)
+  File.rename(tmp, CLASH_FILE)
+  reload_runtime_config(CLASH_FILE)
+  log("info", "rebuilt and reloaded mihomo runtime config",
+      proxy_count: (subscription["proxies"] || []).length,
+      group_count: (subscription["proxy-groups"] || []).length,
+      rule_count: (subscription["rules"] || []).length)
+end
+
+def fallback_download_subscription(item)
+  url = item["url"].to_s
+  file = item["file"].to_s
+  raise "current profile has no subscription url" unless url.start_with?("http://", "https://")
+  raise "current profile has no profile file" if file.empty?
+
+  target = File.join(DATA_DIR, "profiles", file)
+  tmp = File.join(STATE_DIR, "#{file}.download")
+  headers_path = File.join(STATE_DIR, "#{file}.headers")
+  stdout, stderr, code = capture_status(
+    "/usr/bin/curl",
+    "--fail",
+    "--location",
+    "--silent",
+    "--show-error",
+    "--connect-timeout", "15",
+    "--max-time", "90",
+    "--user-agent", "Clash Verge Rev",
+    "--dump-header", headers_path,
+    "--output", tmp,
+    url
+  )
+  raise "subscription download failed code=#{code} err=#{safe_error(stderr)} out=#{safe_error(stdout)}" unless code.zero?
+
+  downloaded = load_yaml_file(tmp)
+  unless downloaded.is_a?(Hash) && downloaded["proxies"].is_a?(Array) && downloaded["proxy-groups"].is_a?(Array)
+    File.delete(tmp) if File.exist?(tmp)
+    raise "downloaded subscription does not look like a Clash profile"
+  end
+
+  FileUtils.mkdir_p(BACKUP_DIR)
+  FileUtils.cp(target, File.join(BACKUP_DIR, "#{file}.#{Time.now.strftime("%Y%m%d_%H%M%S")}.bak")) if File.exist?(target)
+  File.rename(tmp, target)
+  headers = parse_headers(headers_path)
+  update_profile_metadata(item["uid"], now_i, headers)
+  write_and_reload_runtime(downloaded)
+  kickstart_app
+  wait_for_api(45)
+  log("info", "updated subscription by direct profile download and runtime rebuild",
+      profile_uid: item["uid"], profile_name: item["name"], proxy_count: downloaded["proxies"].length)
+end
+
+def refresh_subscription(force)
+  _profiles, item = current_profile_item
+  raise "no current Clash Verge profile found" unless item
+  raise "current profile is not remote" unless item["type"] == "remote"
+
+  previous_updated = item["updated"].to_i
+  due = force || previous_updated.zero? || now_i - previous_updated >= SUBSCRIPTION_REFRESH_INTERVAL
+  return false unless due
+
+  log("info", "refreshing subscription via Clash Verge", profile_uid: item["uid"], profile_name: item["name"],
+      previous_updated: previous_updated)
+  fallback_download_subscription(item)
+  wait_for_api(30)
+
+  _profiles_after, item_after = current_profile_item
+  log("info", "subscription refresh verified",
+      profile_uid: item_after && item_after["uid"],
+      profile_name: item_after && item_after["name"],
+      updated_at: item_after && Time.at(item_after["updated"].to_i).iso8601)
+  true
+end
+
+def proxy_groups(proxies)
+  proxies.select { |_name, info| GROUP_TYPE_NAMES.include?(info["type"]) || info.key?("all") }
+end
+
+def choose_main_group(proxies)
+  groups = proxy_groups(proxies)
+  selected = groups.find { |name, info| name.include?("节点选择") && info["type"] == "Selector" && (info["all"] || []).any? { |node| node.include?("日本") } }
+  selected ||= groups.find { |_name, info| info["type"] == "Selector" && (info["all"] || []).any? { |node| node.include?("日本") } }
+  selected ||= groups.find { |name, _info| name == "GLOBAL" }
+  raise "no selector group found for Japan node switching" unless selected
+
+  [selected[0], selected[1]]
+end
+
+def physical_proxy?(info)
+  return false unless info.is_a?(Hash)
+  return false if GROUP_TYPE_NAMES.include?(info["type"]) || info.key?("all")
+  return false if ["Direct", "Reject", "Compatible"].include?(info["type"])
+
+  true
+end
+
+def japan_candidates(proxies, group_info)
+  group_names = group_info["all"] || []
+  names = group_names.empty? ? proxies.keys : group_names
+  names.select do |name|
+    name.include?("日本") && proxies.key?(name) && physical_proxy?(proxies[name])
+  end.uniq
+end
+
+def node_delay(node_name, label, url)
+  path = "/proxies/#{url_component(node_name)}/delay?timeout=#{DELAY_TIMEOUT_MS}&url=#{url_component(url)}"
+  started = Time.now
+  data = api_get(path, DELAY_CURL_TIMEOUT_SECONDS)
+  delay = data["delay"].to_i
+  raise "empty delay response" if delay <= 0
+
+  { label: label, url: url, ok: true, delay: delay, elapsed_ms: ((Time.now - started) * 1000).round }
+rescue StandardError => e
+  { label: label, url: url, ok: false, error: safe_error(e), elapsed_ms: ((Time.now - started) * 1000).round }
+end
+
+def evaluate_node(node_name)
+  tests = TEST_URLS.map { |label, url| node_delay(node_name, label, url) }
+  delays = tests.select { |test| test[:ok] }.map { |test| test[:delay] }
+  avg = delays.empty? ? nil : (delays.sum.to_f / delays.length).round
+  max = delays.empty? ? nil : delays.max
+  {
+    name: node_name,
+    success_count: delays.length,
+    avg_delay: avg,
+    max_delay: max,
+    tests: tests
+  }
+end
+
+def abnormal_latency?(result)
+  return true if result[:success_count] < TEST_URLS.length
+  return true if result[:avg_delay].nil?
+  return true if result[:avg_delay] > LATENCY_THRESHOLD_MS
+  return true if result[:max_delay] && result[:max_delay] > LATENCY_THRESHOLD_MS
+
+  false
+end
+
+def rank_nodes(candidates)
+  queue = Queue.new
+  candidates.each { |name| queue << name }
+  results = []
+  mutex = Mutex.new
+
+  [RANK_WORKERS, candidates.length].min.times.map do
+    Thread.new do
+      loop do
+        name = begin
+          queue.pop(true)
+        rescue ThreadError
+          nil
+        end
+        break unless name
+
+        result = evaluate_node(name)
+        mutex.synchronize { results << result }
+        log("info", "tested japan candidate", node: name, success_count: result[:success_count],
+            avg_delay: result[:avg_delay], max_delay: result[:max_delay])
+      end
+    end
+  end.each(&:join)
+
+  results.sort_by do |result|
+    [
+      result[:success_count] == TEST_URLS.length ? 0 : 1,
+      -result[:success_count],
+      result[:avg_delay] || 999_999,
+      result[:max_delay] || 999_999,
+      result[:name]
+    ]
+  end
+end
+
+def switch_group(group_name, node_name)
+  api_put("/proxies/#{url_component(group_name)}", { "name" => node_name })
+  api_delete("/connections")
+rescue StandardError => e
+  log("warn", "failed to close old connections after switching node", error: safe_error(e))
+end
+
+def monitor_and_select(force_select)
+  proxies = api_get("/proxies", 12)["proxies"] || {}
+  group_name, group_info = choose_main_group(proxies)
+  current = group_info["now"].to_s
+  current_result = current.empty? ? nil : evaluate_node(current)
+  bad = force_select || current_result.nil? || abnormal_latency?(current_result)
+
+  log("info", "current node checked",
+      group: group_name,
+      current: current,
+      force_select: force_select,
+      abnormal: bad,
+      success_count: current_result && current_result[:success_count],
+      avg_delay: current_result && current_result[:avg_delay],
+      max_delay: current_result && current_result[:max_delay])
+  return { group: group_name, current: current, switched: false, current_result: current_result } unless bad
+
+  candidates = japan_candidates(proxies, group_info)
+  raise "no Japan candidates found in group #{group_name}" if candidates.empty?
+
+  ranked = rank_nodes(candidates)
+  winner = ranked.first
+  raise "all Japan node tests failed" unless winner
+
+  switch_group(group_name, winner[:name])
+  log("info", "selected fastest japan node",
+      group: group_name,
+      previous: current,
+      selected: winner[:name],
+      success_count: winner[:success_count],
+      avg_delay: winner[:avg_delay],
+      max_delay: winner[:max_delay],
+      top5: ranked.first(5).map { |item| { name: item[:name], success_count: item[:success_count], avg_delay: item[:avg_delay], max_delay: item[:max_delay] } })
+
+  {
+    group: group_name,
+    current: current,
+    switched: true,
+    selected: winner[:name],
+    selected_result: winner,
+    ranked_top10: ranked.first(10)
+  }
+end
+
+def run_cycle(state, options)
+  unless api_available?
+    ok = restart_app("api_unavailable_before_cycle")
+    raise "Clash Verge API still unavailable after restart attempt" unless ok
+  end
+
+  configs = ensure_runtime_config
+  refreshed = refresh_subscription(options[:force_refresh])
+  configs = ensure_runtime_config if refreshed
+  selection = monitor_and_select(options[:force_select] || refreshed || options[:force_refresh])
+
+  state["last_cycle_at"] = now_i
+  state["last_subscription_refresh_at"] = now_i if refreshed
+  state["last_selected_node"] = selection[:selected] if selection[:selected]
+  state["last_runtime"] = {
+    "mode" => configs["mode"],
+    "tun" => configs.dig("tun", "enable"),
+    "tun_device" => configs.dig("tun", "device"),
+    "mixed_port" => configs["mixed-port"]
+  }
+  state["last_selection"] = selection
+  save_json(STATE_FILE, state)
+  save_json(REPORT_FILE, state)
+end
+
+def parse_options
+  options = { daemon: false, force_refresh: false, force_select: false }
+  OptionParser.new do |parser|
+    parser.on("--daemon") { options[:daemon] = true }
+    parser.on("--once") { options[:daemon] = false }
+    parser.on("--refresh") { options[:force_refresh] = true }
+    parser.on("--select") { options[:force_select] = true }
+  end.parse!
+  options
+end
+
+def with_lock
+  FileUtils.mkdir_p(STATE_DIR)
+  File.open(LOCK_FILE, File::RDWR | File::CREAT, 0o600) do |lock|
+    unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+      log("warn", "guardian already running")
+      exit 0
+    end
+    yield
+  end
+end
+
+options = parse_options
+
+with_lock do
+  state = load_json(STATE_FILE, {})
+  if options[:daemon]
+    log("info", "starting clash verge guardian daemon", interval_seconds: MONITOR_INTERVAL,
+        refresh_interval_seconds: SUBSCRIPTION_REFRESH_INTERVAL,
+        latency_threshold_ms: LATENCY_THRESHOLD_MS)
+    loop do
+      begin
+        run_cycle(state, options.merge(force_refresh: false, force_select: false))
+      rescue StandardError => e
+        log("error", "guardian cycle failed", error: safe_error(e), backtrace: e.backtrace&.first(5))
+        restart_app("cycle_error")
+      end
+      sleep MONITOR_INTERVAL
+    end
+  else
+    run_cycle(state, options)
+  end
+end

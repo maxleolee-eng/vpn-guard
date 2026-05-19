@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.clash-verge.guardian</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/ruby</string>
+    <string>/Users/max/.local/bin/clash-verge-guardian</string>
+    <string>--daemon</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>CLASH_GUARDIAN_INTERVAL</key>
+    <string>60</string>
+    <key>CLASH_GUARDIAN_REFRESH_INTERVAL</key>
+    <string>604800</string>
+    <key>CLASH_GUARDIAN_LATENCY_THRESHOLD_MS</key>
+    <string>400</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>WorkingDirectory</key>
+  <string>/Users/max</string>
+  <key>StandardOutPath</key>
+  <string>/Users/max/.local/state/clash-verge-guardian/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/max/.local/state/clash-verge-guardian/launchd.err.log</string>
+</dict>
+</plist>

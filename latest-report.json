@@ -1,0 +1,45 @@
+{
+  "last_cycle_at": 1779203724,
+  "last_subscription_refresh_at": 1779203109,
+  "last_selected_node": "上海联通转日本NTT6[Trojan][倍率:0.8]",
+  "last_runtime": {
+    "mode": "rule",
+    "tun": true,
+    "tun_device": "utun4",
+    "mixed_port": 7897
+  },
+  "last_selection": {
+    "group": "🚀 节点选择",
+    "current": "上海联通转日本NTT6[Trojan][倍率:0.8]",
+    "switched": false,
+    "current_result": {
+      "name": "上海联通转日本NTT6[Trojan][倍率:0.8]",
+      "success_count": 3,
+      "avg_delay": 106,
+      "max_delay": 130,
+      "tests": [
+        {
+          "label": "google",
+          "url": "https://www.google.com/generate_204",
+          "ok": true,
+          "delay": 92,
+          "elapsed_ms": 477
+        },
+        {
+          "label": "openai",
+          "url": "https://api.openai.com",
+          "ok": true,
+          "delay": 95,
+          "elapsed_ms": 460
+        },
+        {
+          "label": "github",
+          "url": "https://github.com",
+          "ok": true,
+          "delay": 130,
+          "elapsed_ms": 582
+        }
+      ]
+    }
+  }
+}

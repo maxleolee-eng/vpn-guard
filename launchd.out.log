@@ -1,0 +1,8 @@
+{"ts":"2026-05-19T23:12:18+08:00","level":"info","message":"starting clash verge guardian daemon","interval_seconds":60,"refresh_interval_seconds":604800,"latency_threshold_ms":400}
+{"ts":"2026-05-19T23:12:18+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:12:20+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":93,"max_delay":108}
+{"ts":"2026-05-19T23:13:20+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:13:21+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":95,"max_delay":126}
+{"ts":"2026-05-19T23:14:21+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:14:23+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":88,"max_delay":96}
+{"ts":"2026-05-19T23:15:23+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}

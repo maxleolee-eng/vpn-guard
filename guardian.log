@@ -1,0 +1,107 @@
+{"ts":"2026-05-19T23:00:41+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:00:41+08:00","level":"info","message":"refreshing subscription via Clash Verge","profile_uid":"Rcvqn9FttS2T","profile_name":"CordCloud_Clash_1778957052.yaml","previous_updated":1778957063}
+{"ts":"2026-05-19T23:04:21+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:04:21+08:00","level":"info","message":"refreshing subscription via Clash Verge","profile_uid":"Rcvqn9FttS2T","profile_name":"CordCloud_Clash_1778957052.yaml","previous_updated":1778957063}
+{"ts":"2026-05-19T23:04:41+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:04:41+08:00","level":"info","message":"refreshing subscription via Clash Verge","profile_uid":"Rcvqn9FttS2T","profile_name":"CordCloud_Clash_1778957052.yaml","previous_updated":1779203062}
+{"ts":"2026-05-19T23:04:43+08:00","level":"info","message":"rebuilt and reloaded mihomo runtime config","proxy_count":178,"group_count":11,"rule_count":3519}
+{"ts":"2026-05-19T23:04:43+08:00","level":"info","message":"updated subscription by direct profile download and runtime rebuild","profile_uid":"Rcvqn9FttS2T","profile_name":"CordCloud_Clash_1778957052.yaml","proxy_count":178}
+{"ts":"2026-05-19T23:04:43+08:00","level":"info","message":"subscription refresh verified","profile_uid":"Rcvqn9FttS2T","profile_name":"CordCloud_Clash_1778957052.yaml","updated_at":"2026-05-19T23:04:43+08:00"}
+{"ts":"2026-05-19T23:04:43+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海电信转日本NTT[M][Trojan][倍率:1]","force_select":true,"abnormal":true,"success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT4[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT2[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT3[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT6[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT5[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT7[M][Trojan][倍率:1]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海移动转日本NTT[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海移动转日本NTT2[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海移动转日本Webarena[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本BGP5[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本BGP6[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT4[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT5[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT6[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT11[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT12[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:44+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT13[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:46+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本TE2[M][Trojan][倍率:0.8]","success_count":1,"avg_delay":104,"max_delay":104}
+{"ts":"2026-05-19T23:04:49+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:49+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT6[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:51+08:00","level":"info","message":"tested japan candidate","node":"日本BGP2[M][Trojan][测试][倍率:0.6]","success_count":3,"avg_delay":354,"max_delay":789}
+{"ts":"2026-05-19T23:04:53+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":255,"max_delay":316}
+{"ts":"2026-05-19T23:04:54+08:00","level":"info","message":"tested japan candidate","node":"日本NTT[M][Trojan][测试][倍率:0.3]","success_count":3,"avg_delay":478,"max_delay":752}
+{"ts":"2026-05-19T23:04:54+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT7[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:54+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT8[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:04:55+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":258,"max_delay":370}
+{"ts":"2026-05-19T23:04:56+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":96,"max_delay":133}
+{"ts":"2026-05-19T23:04:57+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":90,"max_delay":93}
+{"ts":"2026-05-19T23:04:57+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT3[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":100,"max_delay":134}
+{"ts":"2026-05-19T23:04:58+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP4[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":319,"max_delay":542}
+{"ts":"2026-05-19T23:04:58+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP5[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":315,"max_delay":518}
+{"ts":"2026-05-19T23:04:59+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT4[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":214,"max_delay":466}
+{"ts":"2026-05-19T23:05:00+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":85,"max_delay":91}
+{"ts":"2026-05-19T23:05:01+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE3[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":100,"max_delay":121}
+{"ts":"2026-05-19T23:05:01+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP3[M][Trojan][倍率:0.8]","success_count":2,"avg_delay":244,"max_delay":250}
+{"ts":"2026-05-19T23:05:01+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":84,"max_delay":95}
+{"ts":"2026-05-19T23:05:02+08:00","level":"info","message":"tested japan candidate","node":"日本NTT2[M][Trojan][测试][倍率:0.3]","success_count":1,"avg_delay":354,"max_delay":354}
+{"ts":"2026-05-19T23:05:02+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本Webarena[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":84,"max_delay":87}
+{"ts":"2026-05-19T23:05:03+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT5[Trojan][倍率:0.8]","success_count":3,"avg_delay":237,"max_delay":425}
+{"ts":"2026-05-19T23:05:09+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE4[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":1109,"max_delay":2445}
+{"ts":"2026-05-19T23:05:09+08:00","level":"warn","message":"failed to close old connections after switching node","error":"767: unexpected token at 'Bad Request'"}
+{"ts":"2026-05-19T23:05:09+08:00","level":"info","message":"selected fastest japan node","group":"🚀 节点选择","previous":"上海电信转日本NTT[M][Trojan][倍率:1]","selected":"江苏联通转日本Webarena[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":84,"max_delay":87,"top5":[{"name":"江苏联通转日本Webarena[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":84,"max_delay":87},{"name":"江苏联通转日本TE[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":84,"max_delay":95},{"name":"江苏联通转日本TE2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":85,"max_delay":91},{"name":"江苏联通转日本NTT2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":90,"max_delay":93},{"name":"江苏联通转日本NTT[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":96,"max_delay":133}]}
+{"ts":"2026-05-19T23:10:41+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:10:42+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"江苏联通转日本Webarena[M][Trojan][倍率:0.8]","force_select":true,"abnormal":true,"success_count":3,"avg_delay":91,"max_delay":94}
+{"ts":"2026-05-19T23:10:45+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT4[M][Trojan][倍率:1]","success_count":3,"avg_delay":156,"max_delay":241}
+{"ts":"2026-05-19T23:10:45+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT[M][Trojan][倍率:1]","success_count":3,"avg_delay":267,"max_delay":614}
+{"ts":"2026-05-19T23:10:45+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT3[M][Trojan][倍率:1]","success_count":3,"avg_delay":192,"max_delay":396}
+{"ts":"2026-05-19T23:10:45+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT5[M][Trojan][倍率:1]","success_count":3,"avg_delay":113,"max_delay":161}
+{"ts":"2026-05-19T23:10:46+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT2[M][Trojan][倍率:1]","success_count":3,"avg_delay":110,"max_delay":152}
+{"ts":"2026-05-19T23:10:47+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT6[M][Trojan][倍率:1]","success_count":3,"avg_delay":358,"max_delay":591}
+{"ts":"2026-05-19T23:10:47+08:00","level":"info","message":"tested japan candidate","node":"上海电信转日本NTT7[M][Trojan][倍率:1]","success_count":3,"avg_delay":155,"max_delay":301}
+{"ts":"2026-05-19T23:10:51+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT4[Trojan][倍率:0.8]","success_count":3,"avg_delay":186,"max_delay":389}
+{"ts":"2026-05-19T23:10:52+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT5[Trojan][倍率:0.8]","success_count":3,"avg_delay":161,"max_delay":286}
+{"ts":"2026-05-19T23:10:55+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT6[Trojan][倍率:0.8]","success_count":3,"avg_delay":85,"max_delay":98}
+{"ts":"2026-05-19T23:11:00+08:00","level":"info","message":"tested japan candidate","node":"上海移动转日本NTT[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:00+08:00","level":"info","message":"tested japan candidate","node":"上海移动转日本NTT2[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:00+08:00","level":"info","message":"tested japan candidate","node":"上海移动转日本Webarena[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:01+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本BGP5[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:02+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本BGP6[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:03+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本TE2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":86,"max_delay":109}
+{"ts":"2026-05-19T23:11:10+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT11[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:11+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT13[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:15+08:00","level":"info","message":"tested japan candidate","node":"上海联通转日本NTT12[M][Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:16+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:17+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT6[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:17+08:00","level":"info","message":"tested japan candidate","node":"日本BGP2[M][Trojan][测试][倍率:0.6]","success_count":3,"avg_delay":399,"max_delay":555}
+{"ts":"2026-05-19T23:11:18+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT7[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:21+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":346,"max_delay":588}
+{"ts":"2026-05-19T23:11:21+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP3[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":230,"max_delay":244}
+{"ts":"2026-05-19T23:11:22+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":319,"max_delay":490}
+{"ts":"2026-05-19T23:11:24+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":96,"max_delay":104}
+{"ts":"2026-05-19T23:11:25+08:00","level":"info","message":"tested japan candidate","node":"广东移动转日本NTT8[Trojan][倍率:0.8]","success_count":0,"avg_delay":null,"max_delay":null}
+{"ts":"2026-05-19T23:11:26+08:00","level":"info","message":"tested japan candidate","node":"日本NTT[M][Trojan][测试][倍率:0.3]","success_count":3,"avg_delay":454,"max_delay":667}
+{"ts":"2026-05-19T23:11:26+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP4[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":790,"max_delay":1531}
+{"ts":"2026-05-19T23:11:26+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":102,"max_delay":140}
+{"ts":"2026-05-19T23:11:26+08:00","level":"info","message":"tested japan candidate","node":"日本NTT2[M][Trojan][测试][倍率:0.3]","success_count":3,"avg_delay":351,"max_delay":356}
+{"ts":"2026-05-19T23:11:27+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本BGP5[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":379,"max_delay":653}
+{"ts":"2026-05-19T23:11:28+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT3[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":182,"max_delay":300}
+{"ts":"2026-05-19T23:11:28+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":171,"max_delay":342}
+{"ts":"2026-05-19T23:11:28+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT4[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":99,"max_delay":110}
+{"ts":"2026-05-19T23:11:28+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":95,"max_delay":109}
+{"ts":"2026-05-19T23:11:28+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE3[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":95,"max_delay":104}
+{"ts":"2026-05-19T23:11:29+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本Webarena[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":105,"max_delay":128}
+{"ts":"2026-05-19T23:11:35+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本NTT5[Trojan][倍率:0.8]","success_count":2,"avg_delay":359,"max_delay":577}
+{"ts":"2026-05-19T23:11:35+08:00","level":"info","message":"tested japan candidate","node":"江苏联通转日本TE4[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":613,"max_delay":937}
+{"ts":"2026-05-19T23:11:35+08:00","level":"info","message":"selected fastest japan node","group":"🚀 节点选择","previous":"江苏联通转日本Webarena[M][Trojan][倍率:0.8]","selected":"上海联通转日本NTT6[Trojan][倍率:0.8]","success_count":3,"avg_delay":85,"max_delay":98,"top5":[{"name":"上海联通转日本NTT6[Trojan][倍率:0.8]","success_count":3,"avg_delay":85,"max_delay":98},{"name":"上海联通转日本TE2[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":86,"max_delay":109},{"name":"江苏联通转日本TE3[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":95,"max_delay":104},{"name":"江苏联通转日本TE[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":95,"max_delay":109},{"name":"江苏联通转日本NTT[M][Trojan][倍率:0.8]","success_count":3,"avg_delay":96,"max_delay":104}]}
+{"ts":"2026-05-19T23:12:18+08:00","level":"info","message":"starting clash verge guardian daemon","interval_seconds":60,"refresh_interval_seconds":604800,"latency_threshold_ms":400}
+{"ts":"2026-05-19T23:12:18+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:12:20+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":93,"max_delay":108}
+{"ts":"2026-05-19T23:13:20+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:13:21+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":95,"max_delay":126}
+{"ts":"2026-05-19T23:14:21+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:14:23+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":88,"max_delay":96}
+{"ts":"2026-05-19T23:15:23+08:00","level":"info","message":"runtime config verified","mode":"rule","tun":true,"tun_device":"utun4","mixed_port":7897}
+{"ts":"2026-05-19T23:15:24+08:00","level":"info","message":"current node checked","group":"🚀 节点选择","current":"上海联通转日本NTT6[Trojan][倍率:0.8]","force_select":false,"abnormal":false,"success_count":3,"avg_delay":106,"max_delay":130}

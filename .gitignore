@@ -1,0 +1,6 @@
+.DS_Store
+backups/
+*.bak
+*.download
+*.headers
+*.tmp
